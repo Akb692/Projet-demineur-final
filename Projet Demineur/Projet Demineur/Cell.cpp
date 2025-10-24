@@ -13,7 +13,7 @@ Cell InitCell(Cell cell)
     return cell;
 }
 
-char GetCell(Cell cell)
+char GetCell(Cell cell) // get the state of the cell
 {
     if (cell.MarkedByFlag)
         return 'F';
@@ -28,7 +28,7 @@ char GetCell(Cell cell)
 
 }
 
-void CellState(Cell cell)
+void CellState(Cell cell) // "debug" func that display all the cases informations
 {
     cout << "Mine: " << cell.GotMine
         << ", Reveal ? " << cell.Reveal

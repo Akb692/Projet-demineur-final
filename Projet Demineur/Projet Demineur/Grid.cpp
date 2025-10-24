@@ -94,7 +94,7 @@ void ChooseCase(Grid* grid, int* col, int* line)
     cin >> *col;
     cin >> *line;
 
-    while (*col < 0 || *col > grid->Column || *line < 0 || *line > grid->Line)
+    while (*col < 0 or *col > grid->Column or *line < 0 or *line > grid->Line)
     {
         cout << "invalid coordinates" << endl;
         cout << "Choose a column and a line to reveal a case" << endl;
@@ -107,10 +107,10 @@ void PlaceMine(Grid* grid, int FirstX, int FirstY)
 {
     for (int i = 0; i < grid->TotalMine; i++)
     {
-        int x = rand() % grid->Line;
+        int x = rand() % grid->Line;  // we randomly choose a case
         int y = rand() % grid->Column;
 
-        if (!grid->cells[x][y].GotMine && x != FirstX && y != FirstY)
+        if (!grid->cells[x][y].GotMine and x != FirstX and y != FirstY) // we don't put the mine on the first player choice
         {
             grid->cells[x][y].GotMine = true;
         }
@@ -121,11 +121,11 @@ Grid InitGrid(int diff)
 {
     Grid grid;
 
-    switch (diff)
+    switch (diff) // first we get the column and line
     {
     case 1:
     {
-        grid.Column = grid.Line = 9;
+        grid.Column = grid.Line = 9; 
     }break;
 
     case 2:
@@ -147,9 +147,9 @@ Grid InitGrid(int diff)
 
     }
 
-    grid.TotalMine = grid.Column * grid.Line * 0.15;
+    grid.TotalMine = grid.Column * grid.Line * 0.15; // we can calculate the number of mine in the grid
 
-    grid.cells = (Cell**)SafeAlloc(sizeof(Cell*) * grid.Line);
+    grid.cells = (Cell**)SafeAlloc(sizeof(Cell*) * grid.Line); // and then we can build the grid in the memory adress
     for (int i = 0; i < grid.Line; ++i)
     {
         grid.cells[i] = (Cell*)SafeAlloc(sizeof(Cell) * grid.Column);
@@ -160,7 +160,7 @@ Grid InitGrid(int diff)
     {
         for (int j = 0; j < grid.Column; j++)
         {
-            grid.cells[i][j] = InitCell(grid.cells[i][j]);
+            grid.cells[i][j] = InitCell(grid.cells[i][j]); // and finally we initiate all the cells
         }
     }
 
@@ -169,14 +169,14 @@ Grid InitGrid(int diff)
 
 int CountAdjacentMine(Grid grid)
 {
-    int LineX[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+    int LineX[8] = { -1, -1, -1, 0, 0, 1, 1, 1 }; // coordinates of all the adjacents mines
     int ColumnY[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
     for (int i = 0; i < grid.Line; i++)
     {
         for (int j = 0; j < grid.Column; j++)
         {
-            if (grid.cells[i][j].GotMine == false)
+            if (grid.cells[i][j].GotMine == false) // we only count case that dont have a mine
             {
                 int count = 0;
 
@@ -188,7 +188,7 @@ int CountAdjacentMine(Grid grid)
 
                     if (ni >= 0 and ni < grid.Line and nj >= 0 and nj < grid.Column)
                     {
-                        if (grid.cells[ni][nj].GotMine)
+                        if (grid.cells[ni][nj].GotMine) // if an adjacent case got a mine we increase count
                         {
                             count++;
                         }
@@ -207,22 +207,22 @@ int CountAdjacentMine(Grid grid)
 void RevealCase(Grid* grid, int x, int y)
 {
 
-    if (x < 0 || x >= grid->Line || y < 0 || y >= grid->Column)
+    if (x < 0 or x >= grid->Line or y < 0 or y >= grid->Column) // the case has to be in bounds
         return;
 
     Cell cell = grid->cells[x][y];
 
 
-    if (cell.Reveal or cell.MarkedByFlag)
+    if (cell.Reveal or cell.MarkedByFlag) // if its already revealed or it got a flag we do nothing
         return;
 
     grid->cells[x][y].Reveal = true;
 
-    if (cell.GotMine)
+    if (cell.GotMine) // if it's a mine we stop
         return;
 
 
-    if (cell.AdjacentMine == 0)
+    if (cell.AdjacentMine == 0) // if the case dont have any adjacent mine it reveal them by recursion 
     {
         int dx[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
         int dy[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -243,10 +243,10 @@ bool CheckVictory(Grid* grid)
         for (int j = 0; j < grid->Column; j++)
         {
             if (grid->cells[i][j].GotMine == false and grid->cells[i][j].Reveal == false)
-                return false;
+                return false; // if a single case without a mine didn't get revealed the player didnt won yet
         }
     }
-    return true;
+    return true; // or else he wins
 }
 
 void RevealAllMines(Grid* grid)
@@ -256,14 +256,14 @@ void RevealAllMines(Grid* grid)
         for (int j = 0; j < grid->Column; j++)
         {
             if (grid->cells[i][j].GotMine)
-                grid->cells[i][j].Reveal = true;
+                grid->cells[i][j].Reveal = true; // reveal all the mine
         }
     }
 }
 
 void ToggleFlag(Grid* grid, int x, int y)
 {
-    if (x < 0 || x >= grid->Line || y < 0 || y >= grid->Column)
+    if (x < 0 or x >= grid->Line or y < 0 or y >= grid->Column)
         return;
 
     Cell* cell = &grid->cells[x][y];
@@ -271,43 +271,42 @@ void ToggleFlag(Grid* grid, int x, int y)
     if (cell->Reveal)
         return;
 
-    cell->MarkedByFlag = !cell->MarkedByFlag;
+    cell->MarkedByFlag = !cell->MarkedByFlag; // the player can flag or unflag as he wish
 }
 
 
 void PlayerAction(Grid* grid, int x, int y, int difficulty, bool* gameOver)
 {
-    // Vérifie que les coordonnées sont valides
     if (x < 0 || x >= grid->Line || y < 0 || y >= grid->Column)
         return;
 
     Cell* cell = &grid->cells[x][y];
 
-    // Si la case est déjà révélée, ne rien faire
+    // if the cell is already revealed, we do nothing
     if (cell->Reveal)
     {
         cout << "This case is already revealed." << endl;
         return;
     }
 
-    // Si la case est marquée par un drapeau, empêcher la révélation
+    // we can't reveal a case already flagged
     if (cell->MarkedByFlag)
     {
-        cout << "This case is flagged. Unflag it first to reveal." << endl;
+        cout << "This case is already flagged. Unflag it to reveal." << endl;
         return;
     }
 
-    // Si la case contient une mine, fin de partie
+    // if it contains a mine, end of the game
     if (cell->GotMine)
     {
         RevealAllMines(grid);
         DisplayGrid(*grid, difficulty);
-        cout << "?? You hit a mine! Game over." << endl;
+        cout << " You hit a mine ! Game over." << endl;
         *gameOver = true;
         return;
     }
 
-    // Sinon, révéler la case
+    // or else, reveal the case
     RevealCase(grid, x, y);
 }
 

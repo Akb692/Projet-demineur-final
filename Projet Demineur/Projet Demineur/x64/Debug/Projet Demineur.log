@@ -1,6 +1,2 @@
-﻿  Cell.cpp
-  Grid.cpp
-C:\Users\itaga\source\repos\Projet Demineur\Projet Demineur\Grid.cpp(150,46): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
-  Projet Demineur.cpp
-  Génération de code en cours...
-  Projet Demineur.vcxproj -> C:\Users\itaga\source\repos\Projet Demineur\x64\Debug\Projet Demineur.exe
+﻿  Projet Demineur.cpp
+  Projet Demineur.vcxproj -> C:\Users\isahouli\Source\Repos\Projet-demineur-final\Projet Demineur\x64\Debug\Projet Demineur.exe
